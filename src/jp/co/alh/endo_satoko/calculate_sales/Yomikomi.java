@@ -30,6 +30,7 @@ public class Yomikomi {
 
 		String origin;
 		String[] branchname = null;
+
 		File branch= new File(args[0]);
 		if(args.length != 1){
 			System.out.println("支店定義ファイルが存在しません");
@@ -119,21 +120,20 @@ public class Yomikomi {
 						return;
 					}
 				}
-
-
 			}
+
 		}
 		//System.out.println(chosenlist);
 
-		//売り上げファイルの読み込み
+		//売り上げファイルの読み込み;
 		for(int i=0; i<chosenlist.size();i++){
 			//ループをまわして新しいリストに足していく
-			ArrayList<String> saleslist = new ArrayList<String>();
 			try {
+				ArrayList<String> saleslist = new ArrayList<String>();
 				FileReader fr = new FileReader(chosenlist.get(i));
 				BufferedReader br = new BufferedReader(fr);
 				String contents;
-				
+
 
 				//支店の合計金額、商品の合計金額に足していく
 				try {
@@ -148,12 +148,27 @@ public class Yomikomi {
 					long commonditysales = commonditysalemap.get(saleslist.get(1));
 					long commonditysum = commonditysales += sale;
 
+
 					//マップに入れる
 					branchsalemap.put(saleslist.get(0),branchsum);
 					commonditysalemap.put(saleslist.get(1), commonditysum);
 
+					//売り上げファイルの支店コードが支店定義ファイルに存在しない場合
+					if(!branchmap.containsKey(saleslist.get(0)))
+					{
+						System.out.println(chosenlist.get(i).getName()+"の支店コードが不正です");
+					}
+
+					//売り上げファイルの商品コードが商品定義ファイルに存在しない場合
+					if(!commonditymap.containsKey(saleslist.get(1)))
+					{
+						System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
+					}
+
+
+
 				} catch (IOException e) {
-					System.out.println("不正です");
+					System.out.println(e);
 					e.printStackTrace();
 				}
 
@@ -177,6 +192,7 @@ public class Yomikomi {
 			}
 		});
 
+
 		/*for (Entry<String, Long> bs : branchsortlist) {
 			System.out.println(bs.getKey() + " = " + bs.getValue());
 		}*/
@@ -190,8 +206,7 @@ public class Yomikomi {
 			brBuffer = new BufferedWriter(brWriter);
 			for(Map.Entry<String, Long> bs : branchsortlist){
 				brBuffer.write(bs.getKey()+","+ branchmap.get(bs.getKey())+","+bs.getValue()+"\n");
-				
-				                  
+
 
 				String bsvalue = String.valueOf(bs.getValue());
 				if(bsvalue.matches("\\d{10,}")){
@@ -242,7 +257,11 @@ public class Yomikomi {
 				if(csvalue.matches("\\d{10,}")){
 					System.out.println("合計金額が10桁を超えました");
 					return;
-				}	
+				}
+				if(!commonditymap.containsKey(cs.getKey()))
+				{
+					System.out.println("支店コードが不正です");
+				}
 			}
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");;
