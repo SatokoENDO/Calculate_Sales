@@ -58,7 +58,7 @@ public class Yomikomi {
 			}
 			//System.out.println(branchmap.entrySet());
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("予期せぬエラーが発生しました");
 		}
 
 
@@ -89,7 +89,7 @@ public class Yomikomi {
 				//System.out.println(commonditymap.entrySet());
 			}
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("予期せぬエラーが発生しました");
 		}
 
 		//集計
@@ -133,6 +133,7 @@ public class Yomikomi {
 				FileReader fr = new FileReader(chosenlist.get(i));
 				BufferedReader br = new BufferedReader(fr);
 				String contents;
+				
 
 				//支店の合計金額、商品の合計金額に足していく
 				try {
@@ -157,7 +158,7 @@ public class Yomikomi {
 				}
 
 			} catch (FileNotFoundException e) {
-				// TODO 自動生成された catch ブロック
+				System.out.println("予期せぬエラーが発生しました");// TODO 自動生成された catch ブロック
 				e.printStackTrace();
 			}
 
@@ -189,10 +190,18 @@ public class Yomikomi {
 			brBuffer = new BufferedWriter(brWriter);
 			for(Map.Entry<String, Long> bs : branchsortlist){
 				brBuffer.write(bs.getKey()+","+ branchmap.get(bs.getKey())+","+bs.getValue()+"\n");
+				
+				                  
+
+				String bsvalue = String.valueOf(bs.getValue());
+				if(bsvalue.matches("\\d{10,}")){
+					System.out.println("合計金額が10桁を超えました");
+					return;
+				}
 
 			}
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("予期せぬエラーが発生しました");
 		}finally{
 			try {
 				brBuffer.close();
@@ -228,14 +237,20 @@ public class Yomikomi {
 			coBuffer = new BufferedWriter(coWriter);
 			for(Map.Entry<String, Long> cs : commonditysortlist){
 				coBuffer.write(cs.getKey()+","+ commonditymap.get(cs.getKey())+","+cs.getValue()+"\n");
+
+				String csvalue = String.valueOf(cs.getValue());
+				if(csvalue.matches("\\d{10,}")){
+					System.out.println("合計金額が10桁を超えました");
+					return;
+				}	
 			}
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("予期せぬエラーが発生しました");;
 		}finally{
 			try {
 				coBuffer.close();
 			} catch (IOException e) {
-				// TODO 自動生成された catch ブロック
+				System.out.println("予期せぬエラーが発生しました");// TODO 自動生成された catch ブロック
 				e.printStackTrace();
 			}
 		}
@@ -251,7 +266,7 @@ public class Yomikomi {
 		try{
 			newcommondityfile.createNewFile();
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("予期せぬエラーが発生しました");
 		}
 
 	}
