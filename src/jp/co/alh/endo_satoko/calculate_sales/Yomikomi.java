@@ -121,7 +121,6 @@ public class Yomikomi {
 					}
 				}
 			}
-
 		}
 		//System.out.println(chosenlist);
 
@@ -164,9 +163,6 @@ public class Yomikomi {
 					{
 						System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
 					}
-
-
-
 				} catch (IOException e) {
 					System.out.println(e);
 					e.printStackTrace();
@@ -176,8 +172,6 @@ public class Yomikomi {
 				System.out.println("予期せぬエラーが発生しました");// TODO 自動生成された catch ブロック
 				e.printStackTrace();
 			}
-
-
 		}
 		//System.out.println(branchsalemap.entrySet());
 		//System.out.println(commonditysalemap.entrySet());
@@ -191,7 +185,6 @@ public class Yomikomi {
 				return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
 			}
 		});
-
 
 		/*for (Entry<String, Long> bs : branchsortlist) {
 			System.out.println(bs.getKey() + " = " + bs.getValue());
@@ -287,14 +280,12 @@ public class Yomikomi {
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
 		}
-
 	}
 
 	private static int parseInt(String string) {
 		// TODO 自動生成されたメソッド・スタブ
 		return 0;
 	}
-
 }
 
 
