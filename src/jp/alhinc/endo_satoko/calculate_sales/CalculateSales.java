@@ -158,79 +158,79 @@ public class CalculateSales {
 
 		//売り上げファイルの読み込み;
 
-			//ループをまわして新しいリストに足していく
-			BufferedReader br = null;
-			try {
-				for(int i=0; i<chosenlist.size();i++){
-					ArrayList<String> saleslist = new ArrayList<String>();
-					FileReader fr = new FileReader(chosenlist.get(i));
-					br = new BufferedReader(fr);
-					String contents;
+		//ループをまわして新しいリストに足していく
+		BufferedReader br = null;
+		try {
+			for(int i=0; i<chosenlist.size();i++){
+				ArrayList<String> saleslist = new ArrayList<String>();
+				FileReader fr = new FileReader(chosenlist.get(i));
+				br = new BufferedReader(fr);
+				String contents;
 
-					//System.out.println(chosenlist.size());
+				//System.out.println(chosenlist.size());
 
-					//支店の合計金額、商品の合計金額に足していく
+				//支店の合計金額、商品の合計金額に足していく
 
-					while((contents = br.readLine()) !=null){
-						saleslist.add(contents);
-					}
-					long sale = Long.parseLong(saleslist.get(2));
+				while((contents = br.readLine()) !=null){
+					saleslist.add(contents);
+				}
+				long sale = Long.parseLong(saleslist.get(2));
 
-					long branchsales = branchsalemap.get(saleslist.get(0));
-					long branchsum = branchsales += sale;
+				long branchsales = branchsalemap.get(saleslist.get(0));
+				long branchsum = branchsales += sale;
 
-					long commonditysales = commonditysalemap.get(saleslist.get(1));
-					long commonditysum = commonditysales += sale;
+				long commonditysales = commonditysalemap.get(saleslist.get(1));
+				long commonditysum = commonditysales += sale;
 
-					//マップに入れる
-					branchsalemap.put(saleslist.get(0),branchsum);
-					commonditysalemap.put(saleslist.get(1), commonditysum);
+				//マップに入れる
+				branchsalemap.put(saleslist.get(0),branchsum);
+				commonditysalemap.put(saleslist.get(1), commonditysum);
 
-					//売り上げファイルの支店コードが支店定義ファイルに存在しない場合
-					if(!branchmap.containsKey(saleslist.get(0)))
-					{
-						System.out.println(chosenlist.get(i).getName()+"の支店コードが不正です");
-						return;
-					}
-
-					//売り上げファイルの商品コードが商品定義ファイルに存在しない場合
-					if(!commonditymap.containsKey(saleslist.get(1)))
-					{
-						System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
-						return;
-					}
+				//売り上げファイルの支店コードが支店定義ファイルに存在しない場合
+				if(!branchmap.containsKey(saleslist.get(0)))
+				{
+					System.out.println(chosenlist.get(i).getName()+"の支店コードが不正です");
+					return;
 				}
 
-			} catch (FileNotFoundException e) {
-				// TODO 自動生成された catch ブロック
-				System.out.println("予期せぬエラーが発生しました");
-				return;
+				//売り上げファイルの商品コードが商品定義ファイルに存在しない場合
+				if(!commonditymap.containsKey(saleslist.get(1)))
+				{
+					System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
+					return;
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO 自動生成された catch ブロック
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		} finally {
+			try {
+				br.close();
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
 				return;
-			} finally {
-				try {
-					br.close();
-				} catch (IOException e) {
-					// TODO 自動生成された catch ブロック
-					System.out.println("予期せぬエラーが発生しました");
-					return;
-				}
-
 			}
-
-			//outFileWriterメソッドでファイル出力
-			if(!outFileWriter(args[0], "branch.out", branchmap, branchsalemap)){
-				return;
-			}
-			if(!outFileWriter(args[0],"commondity.out",commonditymap,commonditysalemap)){
-				return;
-			}
-
-
 
 		}
+
+		//outFileWriterメソッドでファイル出力
+		if(!outFileWriter(args[0], "branch.out", branchmap, branchsalemap)){
+			return;
+		}
+		if(!outFileWriter(args[0],"commondity.out",commonditymap,commonditysalemap)){
+			return;
+		}
+
+
+
 	}
+}
 
 
