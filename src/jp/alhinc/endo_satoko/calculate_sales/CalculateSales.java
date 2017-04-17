@@ -28,12 +28,14 @@ public class CalculateSales {
 		});
 
 		BufferedWriter brBuffer = null;
-		String sep = System.getProperty("line.saparator");
+		//System.out.println(fileName);
+
 
 		try{
-			File branchresult = new File(dirpath,fileName);
-			branchresult.createNewFile();
-			FileWriter brWriter = new FileWriter(branchresult);
+			String sep = System.getProperty("line.separator");
+			File result = new File(dirpath,fileName);
+			result.createNewFile();
+			FileWriter brWriter = new FileWriter(result);
 			brBuffer = new BufferedWriter(brWriter);
 			for(Map.Entry<String, Long> bs : sortlist){
 				brBuffer.write(bs.getKey()+","+ nameMap.get(bs.getKey())+","+bs.getValue()+sep);
@@ -49,7 +51,9 @@ public class CalculateSales {
 			return false;
 		}finally{
 			try {
-				brBuffer.close();
+				if(brBuffer!=null){
+					brBuffer.close();
+				}
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
@@ -57,7 +61,7 @@ public class CalculateSales {
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 
@@ -97,7 +101,9 @@ public class CalculateSales {
 			System.out.println("予期せぬエラーが発生しました");
 		} finally {
 			try {
-				br.close();
+				if(br !=null){
+					br.close();
+				}
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");;
@@ -226,6 +232,7 @@ public class CalculateSales {
 		}
 		if(!outFileWriter(args[0],"commondity.out",commonditymap,commonditysalemap)){
 			return;
+
 		}
 
 
