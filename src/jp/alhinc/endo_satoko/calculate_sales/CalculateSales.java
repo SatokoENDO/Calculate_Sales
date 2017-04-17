@@ -66,7 +66,7 @@ public class CalculateSales {
 
 
 	//fileReaderメソッド
-	public static boolean fileReader(String dirpath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
+	public static boolean lstfileReader(String dirpath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
 
 		BufferedReader br = null;
 		String s;
@@ -86,16 +86,18 @@ public class CalculateSales {
 				// sをコンマで区切り、支店コードと支店名に分割して、配列branchnameにぶちこむ
 				String[] name = null;
 				name= s.split(",",-1);
-
+				if(name.length!=2){
+					return false;
+				}
 
 				//支店定義ファイルのエラー処理
 				if(! name[0].matches(pattern)){
 					System.out.println(whichError+ "定義ファイルのフォーマットが不正です");
 					return false;
-				}else{
-					nameMap.put(name[0],name[1] );
 				}
-				saleMap.put(name[0],0L);//0Lにしておかないと0がintとして処理される
+					nameMap.put(name[0],name[1] );
+					saleMap.put(name[0],0L);//0Lにしておかないと0がintとして処理される
+				
 			}
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
@@ -127,10 +129,10 @@ public class CalculateSales {
 		//ファイル読み込みメソッド呼び出し
 
 
-		if(!fileReader(args[0],"branch.lst","^\\d{3}$","支店",branchmap,branchsalemap)){
+		if(!lstfileReader(args[0],"branch.lst","^\\d{3}$","支店",branchmap,branchsalemap)){
 			return;
 		}
-		if(!fileReader(args[0],"commondity.lst","[a-zA-Z0-9]{8}$","商品",commonditymap,commonditysalemap)){
+		if(!lstfileReader(args[0],"commondity.lst","[a-zA-Z0-9]{8}$","商品",commonditymap,commonditysalemap)){
 			return;
 		}
 
@@ -193,15 +195,13 @@ public class CalculateSales {
 				commonditysalemap.put(saleslist.get(1), commonditysum);
 
 				//売り上げファイルの支店コードが支店定義ファイルに存在しない場合
-				if(!branchmap.containsKey(saleslist.get(0)))
-				{
+				if(!branchmap.containsKey(saleslist.get(0))){
 					System.out.println(chosenlist.get(i).getName()+"の支店コードが不正です");
 					return;
 				}
 
 				//売り上げファイルの商品コードが商品定義ファイルに存在しない場合
-				if(!commonditymap.containsKey(saleslist.get(1)))
-				{
+				if(!commonditymap.containsKey(saleslist.get(1))){
 					System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
 					return;
 				}
@@ -234,8 +234,7 @@ public class CalculateSales {
 			return;
 
 		}
-
-
+		
 
 	}
 }
