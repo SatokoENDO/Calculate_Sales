@@ -87,17 +87,18 @@ public class CalculateSales {
 				String[] name = null;
 				name= s.split(",",-1);
 				if(name.length!=2){
+					System.out.println(whichError+ "定義ファイルのフォーマットが不正です");
 					return false;
 				}
 
 				//支店定義ファイルのエラー処理
-				if(! name[0].matches(pattern)){
+				if(! name[0].matches(pattern) ){
 					System.out.println(whichError+ "定義ファイルのフォーマットが不正です");
 					return false;
 				}
-					nameMap.put(name[0],name[1] );
-					saleMap.put(name[0],0L);//0Lにしておかないと0がintとして処理される
-				
+				nameMap.put(name[0],name[1] );
+				saleMap.put(name[0],0L);//0Lにしておかないと0がintとして処理される
+
 			}
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
@@ -182,9 +183,14 @@ public class CalculateSales {
 				while((contents = br.readLine()) !=null){
 					saleslist.add(contents);
 				}
-				long sale = Long.parseLong(saleslist.get(2));
+				try{
+				long sale = Long.parseLong(saleslist.get(2));}
+				catch(NumberFormatException e){
+					System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
+				}
 
 				long branchsales = branchsalemap.get(saleslist.get(0));
+				long sale = 0;
 				long branchsum = branchsales += sale;
 
 				long commonditysales = commonditysalemap.get(saleslist.get(1));
@@ -234,7 +240,7 @@ public class CalculateSales {
 			return;
 
 		}
-		
+
 
 	}
 }
