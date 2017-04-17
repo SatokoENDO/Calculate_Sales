@@ -28,13 +28,15 @@ public class CalculateSales {
 		});
 
 		BufferedWriter brBuffer = null;
+		String sep = System.getProperty("line.saparator");
+
 		try{
 			File branchresult = new File(dirpath,fileName);
 			branchresult.createNewFile();
 			FileWriter brWriter = new FileWriter(branchresult);
 			brBuffer = new BufferedWriter(brWriter);
 			for(Map.Entry<String, Long> bs : sortlist){
-				brBuffer.write(bs.getKey()+","+ nameMap.get(bs.getKey())+","+bs.getValue()+"\n");
+				brBuffer.write(bs.getKey()+","+ nameMap.get(bs.getKey())+","+bs.getValue()+sep);
 
 				String bsvalue = String.valueOf(bs.getValue());
 				if(bsvalue.matches("\\d{10,}")){
@@ -76,7 +78,7 @@ public class CalculateSales {
 
 				// sをコンマで区切り、支店コードと支店名に分割して、配列branchnameにぶちこむ
 				String[] name = null;
-				name= s.split(",");
+				name= s.split(",",-1);
 
 
 				//支店定義ファイルのエラー処理
@@ -95,7 +97,7 @@ public class CalculateSales {
 				br.close();
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");;
 			}
 		}
 		return true;
@@ -113,8 +115,14 @@ public class CalculateSales {
 		HashMap<String,Long> commonditysalemap = new HashMap<String,Long>();
 
 		//ファイル読み込みメソッド呼び出し
-		fileReader(args[0],"branch.lst","^\\d{3}$","支店",branchmap,branchsalemap);
-		fileReader(args[0],"commondity.lst","[a-zA-Z0-9]{8}$","商品",commonditymap,commonditysalemap);
+
+
+		if(!fileReader(args[0],"branch.lst","^\\d{3}$","支店",branchmap,branchsalemap)){
+			return;
+		}
+		if(!fileReader(args[0],"commondity.lst","[a-zA-Z0-9]{8}$","商品",commonditymap,commonditysalemap)){
+			return;
+		}
 
 
 		//集計
@@ -145,7 +153,7 @@ public class CalculateSales {
 		}
 
 		//売り上げファイルの読み込み;
-		
+
 			//ループをまわして新しいリストに足していく
 			BufferedReader br = null;
 			try {
@@ -166,8 +174,6 @@ public class CalculateSales {
 
 					long branchsales = branchsalemap.get(saleslist.get(0));
 					long branchsum = branchsales += sale;
-
-					System.out.println(commonditysalemap.get(saleslist.get(1)));
 
 					long commonditysales = commonditysalemap.get(saleslist.get(1));
 					long commonditysum = commonditysales += sale;
@@ -191,23 +197,27 @@ public class CalculateSales {
 
 			} catch (FileNotFoundException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
 			} finally {
 				try {
 					br.close();
 				} catch (IOException e) {
 					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
+					System.out.println("予期せぬエラーが発生しました");
 				}
 
 			}
 
 			//outFileWriterメソッドでファイル出力
-			outFileWriter(args[0], "branch.out", branchmap, branchsalemap);
-			outFileWriter(args[0],"commondity.out",commonditymap,commonditysalemap);
+			if(!outFileWriter(args[0], "branch.out", branchmap, branchsalemap)){
+				return;
+			}
+			if(!outFileWriter(args[0],"commondity.out",commonditymap,commonditysalemap)){
+				return;
+			}
 
 
 
