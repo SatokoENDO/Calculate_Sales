@@ -46,12 +46,14 @@ public class CalculateSales {
 			}
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
+			return false;
 		}finally{
 			try {
 				brBuffer.close();
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
+				return false;
 			}
 		}
 
@@ -71,6 +73,7 @@ public class CalculateSales {
 			File file = new File(dirpath,fileName);
 			if(!file.exists()){
 				System.out.println("支店定義ファイルが存在しません");
+				return false;
 			}
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);;
@@ -98,6 +101,7 @@ public class CalculateSales {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");;
+				return false;
 			}
 		}
 		return true;
@@ -186,27 +190,32 @@ public class CalculateSales {
 					if(!branchmap.containsKey(saleslist.get(0)))
 					{
 						System.out.println(chosenlist.get(i).getName()+"の支店コードが不正です");
+						return;
 					}
 
 					//売り上げファイルの商品コードが商品定義ファイルに存在しない場合
 					if(!commonditymap.containsKey(saleslist.get(1)))
 					{
 						System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
+						return;
 					}
 				}
 
 			} catch (FileNotFoundException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
+				return;
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
+				return;
 			} finally {
 				try {
 					br.close();
 				} catch (IOException e) {
 					// TODO 自動生成された catch ブロック
 					System.out.println("予期せぬエラーが発生しました");
+					return;
 				}
 
 			}
