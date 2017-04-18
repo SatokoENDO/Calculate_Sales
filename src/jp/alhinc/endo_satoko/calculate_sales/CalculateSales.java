@@ -32,7 +32,7 @@ public class CalculateSales {
 
 			File file = new File(dirpath,fileName);
 			if(!file.exists()){
-				System.out.println(whichError+"定義ファイルが存在しません");
+				System.out.println("支店定義ファイルが存在しません");
 				return false;
 			}
 
@@ -62,7 +62,7 @@ public class CalculateSales {
 			}
 
 		} catch(FileNotFoundException e){
-			System.out.println(whichError + "定義ファイルが見つかりません");
+			System.out.println(whichError + "定義ファイルが存在しません");
 			return false;
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
@@ -73,7 +73,6 @@ public class CalculateSales {
 					br.close();
 				}
 			} catch (IOException e) {
-				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");;
 				return false;
 			}
@@ -117,7 +116,6 @@ public class CalculateSales {
 					brBuffer.close();
 				}
 			} catch (IOException e) {
-				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
 				return false;
 			}
@@ -179,7 +177,7 @@ public class CalculateSales {
 			for(int num = 0; num< chosenlist.size(); num++){
 				String [] filename = chosenlist.get(num).getName().split("\\.");
 				int filenumber = Integer.parseInt(filename[0]);
-				if(!((num +1) == filenumber&&(chosenlist.size()+2)==filelist.length)){
+				if(!((num +1) == filenumber)){
 					System.out.println("売上ファイル名が連番になっていません");
 					return;
 				}
@@ -203,12 +201,12 @@ public class CalculateSales {
 				if(saleslist.size() != 3){
 					System.out.println(chosenlist.get(i).getName() + "のフォーマットが不正です");
 				}
-				long sale = 0;
 
+				long sale = 0;
 				try{
 					sale = Long.parseLong(saleslist.get(2));
 				}catch(NumberFormatException e){
-					System.out.println(chosenlist.get(i).getName() + "のフォーマットが不正です");
+					System.out.println("予期せぬエラーが発生しました");
 					return;
 				}
 
@@ -252,11 +250,9 @@ public class CalculateSales {
 			}
 
 		} catch (FileNotFoundException e) {
-			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		} finally {
@@ -265,7 +261,6 @@ public class CalculateSales {
 					br.close();
 				}
 			} catch (IOException e) {
-				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
 				return;
 			}
