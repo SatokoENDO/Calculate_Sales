@@ -198,6 +198,7 @@ public class CalculateSales {
 
 				if(saleslist.size() != 3){
 					System.out.println(chosenlist.get(i).getName() + "のフォーマットが不正です");
+					return;
 				}
 
 				long sale = Long.parseLong(saleslist.get(2));
