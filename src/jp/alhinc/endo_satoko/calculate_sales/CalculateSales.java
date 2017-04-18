@@ -17,7 +17,6 @@ import java.util.Map;
 public class CalculateSales {
 
 	//ファイル読み込みメソッド
-	//fileReaderメソッド
 	public static boolean lstfileReader(String dirpath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
 
 		BufferedReader br = null;
@@ -169,17 +168,19 @@ public class CalculateSales {
 			for(int i = 0; i<filelist.length; i++){
 				filelist[i].getName();
 
+
+				//売上ファイル名の限定
 				if(filelist[i].getName().matches("^[0-9]{8}.rcd$") && filelist[i].isFile()){//数字が8桁で末尾に.rcdを含む
 					chosenlist.add(filelist[i]);
 				}
 			}
 
-			//歯抜けになっている場合の処理
+			//売上ファイル名が歯抜けになっている場合の処理
 			for(int num = 0; num< chosenlist.size(); num++){
 				String [] filename = chosenlist.get(num).getName().split("\\.");
 				int filenumber = Integer.parseInt(filename[0]);
-				if(!((num +1) == filenumber)){
-					System.out.println("売り上げファイル名が連番になっていません");
+				if(!((num +1) == filenumber&&(chosenlist.size()+2)==filelist.length)){
+					System.out.println("売上ファイル名が連番になっていません");
 					return;
 				}
 			}
@@ -202,8 +203,15 @@ public class CalculateSales {
 				if(saleslist.size() != 3){
 					System.out.println(chosenlist.get(i).getName() + "のフォーマットが不正です");
 				}
+				long sale = 0;
 
-				long sale = Long.parseLong(saleslist.get(2));
+				try{
+					sale = Long.parseLong(saleslist.get(2));
+				}catch(NumberFormatException e){
+					System.out.println(chosenlist.get(i).getName() + "のフォーマットが不正です");
+					return;
+				}
+
 
 
 				//売り上げファイルの支店コードが支店定義ファイルに存在しない場合
@@ -212,18 +220,20 @@ public class CalculateSales {
 					return;
 				}
 
+
+
 				long branchsales = branchsalemap.get(saleslist.get(0));
 				long branchsum = branchsales += sale;
 
 
-				if(branchsum>9999999999L){
+				if(branchsum > 9999999999L){
 					System.out.println("合計金額が10桁を超えました");
 					return ;
 				}
 
 				branchsalemap.put(saleslist.get(0), branchsum);
 
-				//売り上げファイルの商品コードが商品定義ファイルに存在しない場合
+				//売上ファイルの商品コードが商品定義ファイルに存在しない場合
 				if(!commoditymap.containsKey(saleslist.get(1))){
 					System.out.println(chosenlist.get(i).getName() + "の商品コードが不正です");
 					return;
@@ -253,7 +263,7 @@ public class CalculateSales {
 			try {
 				if(br != null){
 					br.close();
-				}	
+				}
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
