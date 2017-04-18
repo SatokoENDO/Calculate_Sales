@@ -64,8 +64,10 @@ public class CalculateSales {
 
 		} catch(FileNotFoundException e){
 			System.out.println(whichError+"定義ファイルが見つかりません");
+			return false;
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
+			return false;
 		}finally {
 			try {
 				if(br !=null){
@@ -133,11 +135,11 @@ public class CalculateSales {
 		//支店コードをkey、支店名をvalueにしたマップ
 		HashMap<String,String> branchmap = new HashMap<String,String>();
 		//商品コードをkey、商品名をvalueにしたマップ
-		HashMap<String,String> commonditymap = new HashMap<String,String>();
+		HashMap<String,String> commoditymap = new HashMap<String,String>();
 		//支店コードをkey、売り上げをvalueにしたマップ.売り上げはLong型
 		HashMap<String,Long> branchsalemap = new HashMap<String,Long>();
 		//商品コードをkey、売り上げをvalueにしたマップ
-		HashMap<String,Long> commonditysalemap = new HashMap<String,Long>();
+		HashMap<String,Long> commoditysalemap = new HashMap<String,Long>();
 
 		if(args.length!=1){
 			System.out.println("予期せぬエラーが発生しました");
@@ -149,7 +151,7 @@ public class CalculateSales {
 			return;
 		}
 
-		if(!lstfileReader(args[0],"commondity.lst","[a-zA-Z0-9]{8}$","商品",commonditymap,commonditysalemap)){
+		if(!lstfileReader(args[0],"commodity.lst","[a-zA-Z0-9]{8}$","商品",commoditymap,commoditysalemap)){
 			return;
 		}
 
@@ -222,20 +224,20 @@ public class CalculateSales {
 				branchsalemap.put(saleslist.get(0),branchsum);
 
 				//売り上げファイルの商品コードが商品定義ファイルに存在しない場合
-				if(!commonditymap.containsKey(saleslist.get(1))){
+				if(!commoditymap.containsKey(saleslist.get(1))){
 					System.out.println(chosenlist.get(i).getName()+"の商品コードが不正です");
 					return;
 				}
 
-				long commonditysales = commonditysalemap.get(saleslist.get(1));
-				long commonditysum = commonditysales += sale;
+				long commoditysales = commoditysalemap.get(saleslist.get(1));
+				long commoditysum = commoditysales += sale;
 
-				if(commonditysum>9999999999L){
+				if(commoditysum>9999999999L){
 					System.out.println("合計金額が10桁を超えました");
 					return ;
 				}
 
-				commonditysalemap.put(saleslist.get(1), commonditysum);
+				commoditysalemap.put(saleslist.get(1), commoditysum);
 
 			}
 
@@ -254,7 +256,8 @@ public class CalculateSales {
 				}	
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 		}
 
@@ -263,7 +266,7 @@ public class CalculateSales {
 		if(!outFileWriter(args[0], "branch.out", branchmap, branchsalemap)){
 			return;
 		}
-		if(!outFileWriter(args[0],"commondity.out",commonditymap,commonditysalemap)){
+		if(!outFileWriter(args[0],"commodity.out",commoditymap,commoditysalemap)){
 			return;
 
 		}
