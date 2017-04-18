@@ -202,14 +202,7 @@ public class CalculateSales {
 					System.out.println(chosenlist.get(i).getName() + "のフォーマットが不正です");
 				}
 
-				long sale = 0;
-				try{
-					sale = Long.parseLong(saleslist.get(2));
-				}catch(NumberFormatException e){
-					System.out.println("予期せぬエラーが発生しました");
-					return;
-				}
-
+				long sale = Long.parseLong(saleslist.get(2));
 
 
 				//売り上げファイルの支店コードが支店定義ファイルに存在しない場合
@@ -217,9 +210,6 @@ public class CalculateSales {
 					System.out.println(chosenlist.get(i).getName() + "の支店コードが不正です");
 					return;
 				}
-
-
-
 				long branchsales = branchsalemap.get(saleslist.get(0));
 				long branchsum = branchsales += sale;
 
@@ -253,6 +243,9 @@ public class CalculateSales {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		} catch (IOException e) {
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		} catch (NumberFormatException e) {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		} finally {
