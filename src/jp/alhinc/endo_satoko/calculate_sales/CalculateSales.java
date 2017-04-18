@@ -32,7 +32,7 @@ public class CalculateSales {
 
 			File file = new File(dirpath,fileName);
 			if(!file.exists()){
-				System.out.println("支店定義ファイルが存在しません");
+				System.out.println(whichError + "定義ファイルが存在しません");
 				return false;
 			}
 
@@ -123,8 +123,6 @@ public class CalculateSales {
 
 		return true;
 	}
-
-
 
 
 	public static void main(String[] args) {
@@ -258,7 +256,6 @@ public class CalculateSales {
 				return;
 			}
 		}
-
 
 		//outFileWriterメソッドでファイル出力
 		if(!outFileWriter(args[0], "branch.out", branchmap, branchsalemap)){
