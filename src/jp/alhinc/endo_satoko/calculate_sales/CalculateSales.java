@@ -17,7 +17,7 @@ import java.util.Map;
 public class CalculateSales {
 
 	//ファイル読み込みメソッド
-	public static boolean lstfileReader(String dirpath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
+	public static boolean lstfileReader(String dirPath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
 
 		BufferedReader br = null;
 
@@ -25,12 +25,12 @@ public class CalculateSales {
 
 		//支店定義ファイルの読み込み
 		try{
-			if(dirpath == null){
+			if(dirPath == null){
 				System.out.println("予期せぬエラーが発生しました");
 				return false;
 			}
 
-			File file = new File(dirpath,fileName);
+			File file = new File(dirPath,fileName);
 			if(!file.exists()){
 				System.out.println(whichError + "定義ファイルが存在しません");
 				return false;
@@ -82,7 +82,7 @@ public class CalculateSales {
 
 
 	//ファイルソートメソッド
-	public static boolean outFileWriter(String dirpath, String fileName, HashMap<String,String>nameMap,HashMap<String,Long>saleMap){
+	public static boolean outFileWriter(String dirPath, String fileName, HashMap<String,String>nameMap,HashMap<String,Long>saleMap){
 
 
 		BufferedWriter brBuffer = null;
@@ -90,7 +90,7 @@ public class CalculateSales {
 
 
 		try{
-			File result = new File(dirpath,fileName);
+			File result = new File(dirPath,fileName);
 			result.createNewFile();
 			FileWriter brWriter = new FileWriter(result);
 			brBuffer = new BufferedWriter(brWriter);
