@@ -17,7 +17,7 @@ import java.util.Map;
 public class CalculateSales {
 
 	//ファイル読み込みメソッド
-	public static boolean lstfileReader(String dirPath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
+	public static boolean lstFileReader(String dirPath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
 
 		BufferedReader br = null;
 
@@ -128,13 +128,13 @@ public class CalculateSales {
 	public static void main(String[] args) {
 
 		//支店コードをkey、支店名をvalueにしたマップ
-		HashMap<String, String> branchmap = new HashMap<String, String>();
+		HashMap<String, String> branchMap = new HashMap<String, String>();
 		//商品コードをkey、商品名をvalueにしたマップ
-		HashMap<String, String> commoditymap = new HashMap<String, String>();
+		HashMap<String, String> commodityMap = new HashMap<String, String>();
 		//支店コードをkey、売り上げをvalueにしたマップ.売り上げはLong型
-		HashMap<String, Long> branchsalemap = new HashMap<String, Long>();
+		HashMap<String, Long> branchSaleMap = new HashMap<String, Long>();
 		//商品コードをkey、売り上げをvalueにしたマップ
-		HashMap<String, Long> commoditysalemap = new HashMap<String, Long>();
+		HashMap<String, Long> commoditySaleMap = new HashMap<String, Long>();
 
 		if(args.length != 1){
 			System.out.println("予期せぬエラーが発生しました");
@@ -142,11 +142,11 @@ public class CalculateSales {
 		}
 
 		//ファイル読み込みメソッド呼び出し
-		if(!lstfileReader(args[0], "branch.lst","^\\d{3}$", "支店", branchmap, branchsalemap)){
+		if(!lstFileReader(args[0], "branch.lst","^\\d{3}$", "支店", branchMap, branchSaleMap)){
 			return;
 		}
 
-		if(!lstfileReader(args[0], "commodity.lst", "[a-zA-Z0-9]{8}$", "商品",commoditymap, commoditysalemap)){
+		if(!lstFileReader(args[0], "commodity.lst", "[a-zA-Z0-9]{8}$", "商品",commodityMap, commoditySaleMap)){
 			return;
 		}
 
@@ -156,85 +156,85 @@ public class CalculateSales {
 		try {
 			//集計
 			File file = new File(args[0]);
-			File [] filelist=file.listFiles();
+			File [] fileList=file.listFiles();
 
-			//System.out.println(+filelist.length);
+			//System.out.println(+fileList.length);
 
-			ArrayList<File> chosenlist = new ArrayList<File>();
-			for(int i = 0; i<filelist.length; i++){
-				filelist[i].getName();
+			ArrayList<File> chosenList = new ArrayList<File>();
+			for(int i = 0; i<fileList.length; i++){
+				fileList[i].getName();
 
 
 				//売上ファイル名の限定
-				if(filelist[i].getName().matches("^[0-9]{8}.rcd$") && filelist[i].isFile()){//数字が8桁で末尾に.rcdを含む
-					chosenlist.add(filelist[i]);
+				if(fileList[i].getName().matches("^[0-9]{8}.rcd$") && fileList[i].isFile()){//数字が8桁で末尾に.rcdを含む
+					chosenList.add(fileList[i]);
 				}
 			}
 
 			//売上ファイル名が歯抜けになっている場合の処理
-			for(int num = 0; num< chosenlist.size(); num++){
-				String [] filename = chosenlist.get(num).getName().split("\\.");
-				int filenumber = Integer.parseInt(filename[0]);
-				if(!((num +1) == filenumber)){
+			for(int num = 0; num< chosenList.size(); num++){
+				String [] fileName = chosenList.get(num).getName().split("\\.");
+				int fileNumber = Integer.parseInt(fileName[0]);
+				if(!((num +1) == fileNumber)){
 					System.out.println("売上ファイル名が連番になっていません");
 					return;
 				}
 			}
 
-			for(int i=0; i<chosenlist.size(); i++){
-				ArrayList<String> saleslist = new ArrayList<String>();
-				File salesfile = chosenlist.get(i);
-				FileReader fr = new FileReader(salesfile);
+			for(int i=0; i<chosenList.size(); i++){
+				ArrayList<String> salesList = new ArrayList<String>();
+				File salesFile = chosenList.get(i);
+				FileReader fr = new FileReader(salesFile);
 				br = new BufferedReader(fr);
 				String contents;
 
-				//System.out.println(chosenlist.size());
+				//System.out.println(chosenList.size());
 
 				//支店の合計金額、商品の合計金額に足していく
 
 				while((contents = br.readLine()) != null){
-					saleslist.add(contents);
+					salesList.add(contents);
 				}
 
-				if(saleslist.size() != 3){
-					System.out.println(chosenlist.get(i).getName() + "のフォーマットが不正です");
+				if(salesList.size() != 3){
+					System.out.println(chosenList.get(i).getName() + "のフォーマットが不正です");
 					return;
 				}
 
-				long sale = Long.parseLong(saleslist.get(2));
+				long sale = Long.parseLong(salesList.get(2));
 
 
 				//売り上げファイルの支店コードが支店定義ファイルに存在しない場合
-				if(!branchmap.containsKey(saleslist.get(0))){
-					System.out.println(chosenlist.get(i).getName() + "の支店コードが不正です");
+				if(!branchMap.containsKey(salesList.get(0))){
+					System.out.println(chosenList.get(i).getName() + "の支店コードが不正です");
 					return;
 				}
-				long branchsales = branchsalemap.get(saleslist.get(0));
-				long branchsum = branchsales += sale;
+				long branchsales = branchSaleMap.get(salesList.get(0));
+				long branchSum = branchsales += sale;
 
 
-				if(branchsum > 9999999999L){
+				if(branchSum > 9999999999L){
 					System.out.println("合計金額が10桁を超えました");
 					return ;
 				}
 
-				branchsalemap.put(saleslist.get(0), branchsum);
+				branchSaleMap.put(salesList.get(0), branchSum);
 
 				//売上ファイルの商品コードが商品定義ファイルに存在しない場合
-				if(!commoditymap.containsKey(saleslist.get(1))){
-					System.out.println(chosenlist.get(i).getName() + "の商品コードが不正です");
+				if(!commodityMap.containsKey(salesList.get(1))){
+					System.out.println(chosenList.get(i).getName() + "の商品コードが不正です");
 					return;
 				}
 
-				long commoditysales = commoditysalemap.get(saleslist.get(1));
-				long commoditysum = commoditysales += sale;
+				long commoditySales = commoditySaleMap.get(salesList.get(1));
+				long commoditySum = commoditySales += sale;
 
-				if(commoditysum>9999999999L){
+				if(commoditySum>9999999999L){
 					System.out.println("合計金額が10桁を超えました");
 					return ;
 				}
 
-				commoditysalemap.put(saleslist.get(1), commoditysum);
+				commoditySaleMap.put(salesList.get(1), commoditySum);
 
 			}
 
@@ -259,10 +259,10 @@ public class CalculateSales {
 		}
 
 		//outFileWriterメソッドでファイル出力
-		if(!outFileWriter(args[0], "branch.out", branchmap, branchsalemap)){
+		if(!outFileWriter(args[0], "branch.out", branchMap, branchSaleMap)){
 			return;
 		}
-		if(!outFileWriter(args[0],"commodity.out",commoditymap, commoditysalemap)){
+		if(!outFileWriter(args[0],"commodity.out",commodityMap, commoditySaleMap)){
 			return;
 
 		}
