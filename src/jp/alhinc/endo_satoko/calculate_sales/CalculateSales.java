@@ -16,114 +16,6 @@ import java.util.Map;
 
 public class CalculateSales {
 
-	//ファイル読み込みメソッド
-	public static boolean lstFileReader(String dirPath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
-
-		BufferedReader br = null;
-
-
-
-		//支店定義ファイルの読み込み
-		try{
-			if(dirPath == null){
-				System.out.println("予期せぬエラーが発生しました");
-				return false;
-			}
-
-			File file = new File(dirPath,fileName);
-			if(!file.exists()){
-				System.out.println(whichError + "定義ファイルが存在しません");
-				return false;
-			}
-
-			FileReader fr = new FileReader(file);
-			br = new BufferedReader(fr);;
-
-			String s;
-
-			while((s = br.readLine()) != null){
-
-				// sをコンマで区切り、支店コードと支店名に分割して、配列nameにぶちこむ
-				String[] name = null;
-				name = s.split(",", -1);
-				if (name.length != 2){
-					System.out.println(whichError + "定義ファイルのフォーマットが不正です");
-					return false;
-				}
-
-				//支店定義ファイルのエラー処理
-				if( name[0].matches(pattern)){
-					nameMap.put(name[0],name[1] );
-					saleMap.put(name[0],0L);//0Lにしておかないと0がintとして処理される
-				}else{
-					System.out.println(whichError + "定義ファイルのフォーマットが不正です");
-					return false;
-				}
-			}
-
-		} catch(FileNotFoundException e){
-			System.out.println(whichError + "定義ファイルが存在しません");
-			return false;
-		}catch(IOException e){
-			System.out.println("予期せぬエラーが発生しました");
-			return false;
-		}finally {
-			try {
-				if(br != null){
-					br.close();
-				}
-			} catch (IOException e) {
-				System.out.println("予期せぬエラーが発生しました");;
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-	//ファイルソートメソッド
-	public static boolean outFileWriter(String dirPath, String fileName, HashMap<String,String>nameMap,HashMap<String,Long>saleMap){
-
-
-		BufferedWriter brBuffer = null;
-		//System.out.println(fileName);
-
-
-		try{
-			File result = new File(dirPath,fileName);
-			result.createNewFile();
-			FileWriter brWriter = new FileWriter(result);
-			brBuffer = new BufferedWriter(brWriter);
-
-			List<Map.Entry<String,Long>> sortList = new ArrayList<Map.Entry<String, Long>>(saleMap.entrySet());
-			Collections.sort(sortList, new Comparator<Map.Entry<String, Long>>(){
-				public int compare (Map.Entry<String,Long> entry1, Map.Entry<String,Long> entry2){
-					return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
-				}
-			});
-
-			String sep = System.getProperty("line.separator");
-
-			for(Map.Entry<String, Long> bs : sortList){
-				brBuffer.write(bs.getKey() + "," + nameMap.get(bs.getKey()) + "," + bs.getValue() + sep);
-			}
-		}catch(IOException e){
-			System.out.println("予期せぬエラーが発生しました");
-			return false;
-		}finally{
-			try {
-				if(brBuffer != null){
-					brBuffer.close();
-				}
-			} catch (IOException e) {
-				System.out.println("予期せぬエラーが発生しました");
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 
 	public static void main(String[] args) {
 
@@ -267,6 +159,116 @@ public class CalculateSales {
 
 		}
 	}
+
+	//ファイル読み込みメソッド
+		public static boolean lstFileReader(String dirPath, String fileName, String pattern, String whichError, HashMap<String,String> nameMap, HashMap<String,Long> saleMap){
+
+			BufferedReader br = null;
+
+
+
+			//支店定義ファイルの読み込み
+			try{
+				if(dirPath == null){
+					System.out.println("予期せぬエラーが発生しました");
+					return false;
+				}
+
+				File file = new File(dirPath,fileName);
+				if(!file.exists()){
+					System.out.println(whichError + "定義ファイルが存在しません");
+					return false;
+				}
+
+				FileReader fr = new FileReader(file);
+				br = new BufferedReader(fr);;
+
+				String s;
+
+				while((s = br.readLine()) != null){
+
+					// sをコンマで区切り、支店コードと支店名に分割して、配列nameにぶちこむ
+					String[] name = null;
+					name = s.split(",", -1);
+					if (name.length != 2){
+						System.out.println(whichError + "定義ファイルのフォーマットが不正です");
+						return false;
+					}
+
+					//支店定義ファイルのエラー処理
+					if( name[0].matches(pattern)){
+						nameMap.put(name[0],name[1] );
+						saleMap.put(name[0],0L);//0Lにしておかないと0がintとして処理される
+					}else{
+						System.out.println(whichError + "定義ファイルのフォーマットが不正です");
+						return false;
+					}
+				}
+
+			} catch(FileNotFoundException e){
+				System.out.println(whichError + "定義ファイルが存在しません");
+				return false;
+			}catch(IOException e){
+				System.out.println("予期せぬエラーが発生しました");
+				return false;
+			}finally {
+				try {
+					if(br != null){
+						br.close();
+					}
+				} catch (IOException e) {
+					System.out.println("予期せぬエラーが発生しました");;
+					return false;
+				}
+			}
+			return true;
+		}
+
+
+		//ファイルソートメソッド
+		public static boolean outFileWriter(String dirPath, String fileName, HashMap<String,String>nameMap,HashMap<String,Long>saleMap){
+
+
+			BufferedWriter brBuffer = null;
+			//System.out.println(fileName);
+
+
+			try{
+				File result = new File(dirPath,fileName);
+				result.createNewFile();
+				FileWriter brWriter = new FileWriter(result);
+				brBuffer = new BufferedWriter(brWriter);
+
+				List<Map.Entry<String,Long>> sortList = new ArrayList<Map.Entry<String, Long>>(saleMap.entrySet());
+				Collections.sort(sortList, new Comparator<Map.Entry<String, Long>>(){
+					public int compare (Map.Entry<String,Long> entry1, Map.Entry<String,Long> entry2){
+						return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
+					}
+				});
+
+				String sep = System.getProperty("line.separator");
+
+				for(Map.Entry<String, Long> bs : sortList){
+					brBuffer.write(bs.getKey() + "," + nameMap.get(bs.getKey()) + "," + bs.getValue() + sep);
+				}
+			}catch(IOException e){
+				System.out.println("予期せぬエラーが発生しました");
+				return false;
+			}finally{
+				try {
+					if(brBuffer != null){
+						brBuffer.close();
+					}
+				} catch (IOException e) {
+					System.out.println("予期せぬエラーが発生しました");
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+
 }
 
 
