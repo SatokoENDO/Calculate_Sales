@@ -95,8 +95,8 @@ public class CalculateSales {
 			FileWriter brWriter = new FileWriter(result);
 			brBuffer = new BufferedWriter(brWriter);
 
-			List<Map.Entry<String,Long>> sortlist = new ArrayList<Map.Entry<String, Long>>(saleMap.entrySet());
-			Collections.sort(sortlist, new Comparator<Map.Entry<String, Long>>(){
+			List<Map.Entry<String,Long>> sortList = new ArrayList<Map.Entry<String, Long>>(saleMap.entrySet());
+			Collections.sort(sortList, new Comparator<Map.Entry<String, Long>>(){
 				public int compare (Map.Entry<String,Long> entry1, Map.Entry<String,Long> entry2){
 					return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
 				}
@@ -104,7 +104,7 @@ public class CalculateSales {
 
 			String sep = System.getProperty("line.separator");
 
-			for(Map.Entry<String, Long> bs : sortlist){
+			for(Map.Entry<String, Long> bs : sortList){
 				brBuffer.write(bs.getKey() + "," + nameMap.get(bs.getKey()) + "," + bs.getValue() + sep);
 			}
 		}catch(IOException e){
